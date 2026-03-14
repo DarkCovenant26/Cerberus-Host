@@ -9,15 +9,27 @@ interface TopBarProps {
 export default function TopBar({ dark, onThemeToggle }: TopBarProps) {
   const [time, setTime] = useState(new Date())
 
+  const utcTime = time.toLocaleTimeString('en-GB',{
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZone: 'UTC'
+  })
+
+  const gmt8Time = time.toLocaleTimeString('en-GB',{
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZone: 'Asia/Singapore'
+  })
+
+
   useEffect(() => {
     const id = setInterval(() => setTime(new Date()), 1000)
     return () => clearInterval(id)
   }, [])
 
-  const formatted = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-  const dateFormatted = time.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })
-
-  return (
+return (
     <header className="topbar">
       <div className="topbar-left">
         <span className="topbar-brand">Cerberus</span>
@@ -26,9 +38,10 @@ export default function TopBar({ dark, onThemeToggle }: TopBarProps) {
         <button className="theme-toggle" onClick={onThemeToggle} title="Toggle theme">
           {dark ? '☀' : '☾'}
         </button>
-        <div className="topbar-clock">
-          <span className="clock-time">{formatted}</span>
-          <span className="clock-date">{dateFormatted}</span>
+        <div className="topbar-clocks">
+          <span className="topbar-clock-inline">{utcTime} <span className="clock-label">(UTC)</span></span>
+          <span className="topbar-clock-divider" />
+          <span className="topbar-clock-inline">{gmt8Time} <span className="clock-label">(GMT+8)</span></span>
         </div>
       </div>
     </header>
